@@ -1,0 +1,1 @@
+Scriptname SimpleItemSpawnerChest15 Extends ObjectReference
