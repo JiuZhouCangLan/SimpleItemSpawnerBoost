@@ -24,6 +24,11 @@ namespace Papyrus::Functions
 	void loadItems(RE::TESDataHandler* a_data)
 	{
 		for (RE::TESForm* form : a_data->GetFormArray<T>()) {
+			if (form->GetFormFlags() & TESForm::RecordFlags::kPlayable)
+			{
+				continue;
+			}
+
 			const RE::TESFile* mod = form->GetFile(0);
 			if (!mod)
 				continue;
