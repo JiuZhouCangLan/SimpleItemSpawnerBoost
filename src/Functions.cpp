@@ -148,7 +148,7 @@ namespace Papyrus::Functions
 		constexpr auto   threadCount = 16;
 		constexpr size_t minBlockSize = 128;
 
-		const auto iterator = CachedItems.find(modName);
+		const auto iterator = CachedItems.find(tolower(modName));
 		if (iterator == CachedItems.end()) {
 			logger::warn("no items in {}", modName);
 			return;
