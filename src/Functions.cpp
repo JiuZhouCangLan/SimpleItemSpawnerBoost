@@ -24,8 +24,7 @@ namespace Papyrus::Functions
 	void loadItems(RE::TESDataHandler* a_data)
 	{
 		for (RE::TESForm* form : a_data->GetFormArray<T>()) {
-			if (form->GetFormFlags() & TESForm::RecordFlags::kPlayable)
-			{
+			if (form->GetFormFlags() & TESForm::RecordFlags::kPlayable) {
 				continue;
 			}
 
@@ -136,35 +135,16 @@ namespace Papyrus::Functions
 		addItem(chestRef, pluginForm);
 	}
 
-	void addItemTask(RE::TESObjectREFR* chestRef, const std::vector<TESForm*>& items, size_t begin, size_t end)
-	{
-		for (size_t i = begin; i < end; ++i) {
-			addItem(chestRef, items.at(i));
-		}
-	}
-
 	void addItems(STATIC_ARGS, RE::TESObjectREFR* chestRef, std::string modName)
 	{
-		constexpr auto   threadCount = 16;
-		constexpr size_t minBlockSize = 128;
-
 		const auto iterator = CachedItems.find(tolower(modName));
 		if (iterator == CachedItems.end()) {
 			logger::warn("no items in {}", modName);
 			return;
 		}
 		auto& items = iterator->second;
-
-		std::vector<std::thread> threads;
-		const auto               itemCount = items.size();
-		size_t                   blockSize = std::max(minBlockSize, itemCount / threadCount);
-		for (size_t i = 0; i < itemCount; i += blockSize) {
-			size_t blockEnd = std::min(i + blockSize, itemCount);
-			threads.push_back(std::thread(addItemTask, chestRef, items, i, blockEnd));
-		}
-
-		for (auto& thread : threads) {
-			thread.join();
+		for (size_t i = 0, count = items.size(); i < count; ++i) {
+			addItem(chestRef, items.at(i));
 		}
 	}
 
